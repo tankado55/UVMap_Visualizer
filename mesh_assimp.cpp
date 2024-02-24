@@ -1,5 +1,6 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
+#include <assimp/postprocess.h>
 #include <iostream>
 #include "mesh.h"
 
@@ -10,9 +11,9 @@ static void convert(aiMesh* mesh, Mesh& output)
     {
         Vertex vertex;
 
-        vertex.p.x = mesh->mVertices[i].x;
-        vertex.p.y = mesh->mVertices[i].y;
-        vertex.p.z = mesh->mVertices[i].z;
+        vertex.pos.x = mesh->mVertices[i].x;
+        vertex.pos.y = mesh->mVertices[i].y;
+        vertex.pos.z = mesh->mVertices[i].z;
 
         // texture coordinates
         if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
@@ -40,7 +41,7 @@ static void convert(aiMesh* mesh, Mesh& output)
     }
 }
 
-static void processNode(aiNode* node, Mesh& mesh)
+static void processNode(aiNode* node, const aiScene* scene, Mesh& mesh)
 {
     // process each mesh located at the current node
     for (unsigned int i = 0; i < node->mNumMeshes; i++)
@@ -52,14 +53,14 @@ static void processNode(aiNode* node, Mesh& mesh)
     // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
     for (unsigned int i = 0; i < node->mNumChildren; i++)
     {
-        processNode(node->mChildren[i], scene);
+        processNode(node->mChildren[i], scene, mesh);
     }
 }
 
 bool Mesh::importOBJ(const char* fileName)
 {
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene* scene = importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_FlipUVs);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
     {
@@ -67,7 +68,7 @@ bool Mesh::importOBJ(const char* fileName)
         return false;
     }
 
-    processNode(scene->mRootNode , *this);
+    processNode(scene->mRootNode , scene, *this);
     return true;
 }
 

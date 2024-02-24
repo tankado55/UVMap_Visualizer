@@ -7,7 +7,6 @@ Mesh Mesh::interpolate(float t) const
 
     result.f = f;
     
-
     result.v.resize(v.size());
     for (int i = 0; i < v.size(); i++)
     {
