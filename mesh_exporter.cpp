@@ -18,11 +18,9 @@ void Mesh::exportOBJ(std::string fileName)
 
 	for (int i = 0; i < f.size(); ++i)
 	{
-		int vx = f[i].vi[0];
-		int vy = f[i].vi[1];
-		int vz = f[i].vi[2];
-		file << "f " << vx << "/" << vx << "/" << vx;
-		file << " " << vy << "/" << vy << "/" << vy;
-		file << " " << vz << "/" << vz << "/" << vz << std::endl;
+		int v0 = f[i].vi[0];
+		int v1 = f[i].vi[1];
+		int v2 = f[i].vi[2];
+		file << "f " << v0 << " " << v1 << " " << v2 << std::endl;
 	}
 }

@@ -29,15 +29,17 @@ static void convert(aiMesh* mesh, Mesh& output)
     for (unsigned int i = 0; i < mesh->mNumFaces; i++)
     {
         aiFace face = mesh->mFaces[i];
+        
+        if (face.mNumIndices == 3) {
+            Face meshFace;
+            meshFace.vi[0] = ++face.mIndices[0];
+            meshFace.vi[1] = ++face.mIndices[1];
+            meshFace.vi[2] = ++face.mIndices[2];
 
-        Face meshFace;
-        meshFace.vi[0] = face.mIndices[0];
-        meshFace.vi[1] = face.mIndices[1];
-        meshFace.vi[2] = face.mIndices[2];
-
-        output.f.push_back(meshFace);
-        if (face.mNumIndices != 3) {
-            std::cout << "error" << std::endl;
+            output.f.push_back(meshFace);
+        }
+        else {
+            std::cout << "warning, face.mNumIndices: " << face.mNumIndices << std::endl;
         }
     }
 }
