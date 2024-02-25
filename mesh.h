@@ -3,6 +3,7 @@
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
 #include <vector>
+#include <string>
 
 struct Vertex
 {
@@ -24,5 +25,5 @@ struct Mesh
 	void drawGL();
 
 	Mesh interpolate(float t) const;
+	void exportOBJ(std::string fileName);
 };
-
