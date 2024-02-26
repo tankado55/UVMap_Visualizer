@@ -102,15 +102,15 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\dev\my_lib\glm-1.0.0-light;D:\dev\my_lib\assimp-5.3.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\dev\my_libs\glm-1.0.0-light;D:\dev\my_libs\assimp-5.3.1\include;D:\dev\my_libs\glew-2.1.0\include;D:\dev\my_libs\GLFW\include;D:\dev\my_libs\imgui-1.90.1</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\dev\my_lib\assimp-5.3.1\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;Glu32.lib;glew32s.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\dev\my_libs\assimp-5.3.1\lib\Debug;D:\dev\my_libs\GLFW\lib-vc2022;D:\dev\my_libs\glew-2.1.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -137,10 +137,25 @@
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="mesh_assimp.cpp" />
     <ClCompile Include="mesh_exporter.cpp" />
-    <ClCompile Include="mesh_opengl.cpp" />
+    <ClCompile Include="meshGL.cpp" />
+    <ClCompile Include="vendor\imgui-1.90.1\backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="vendor\imgui-1.90.1\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="vendor\imgui-1.90.1\imgui.cpp" />
+    <ClCompile Include="vendor\imgui-1.90.1\imgui_demo.cpp" />
+    <ClCompile Include="vendor\imgui-1.90.1\imgui_draw.cpp" />
+    <ClCompile Include="vendor\imgui-1.90.1\imgui_tables.cpp" />
+    <ClCompile Include="vendor\imgui-1.90.1\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mesh.h" />
+    <ClInclude Include="meshGL.h" />
+    <ClInclude Include="vendor\imgui-1.90.1\backends\imgui_impl_glfw.h" />
+    <ClInclude Include="vendor\imgui-1.90.1\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="vendor\imgui-1.90.1\imgui.h" />
+    <ClInclude Include="vendor\imgui-1.90.1\imgui_internal.h" />
+    <ClInclude Include="vendor\imgui-1.90.1\imstb_rectpack.h" />
+    <ClInclude Include="vendor\imgui-1.90.1\imstb_textedit.h" />
+    <ClInclude Include="vendor\imgui-1.90.1\imstb_truetype.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

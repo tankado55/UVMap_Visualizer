@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 
+struct MeshGL;
+
 struct Vertex
 {
 	glm::vec3 pos;
@@ -22,8 +24,8 @@ struct Mesh
 	std::vector<Face> f;
 
 	bool importOBJ(const char* fileName);
-	void drawGL();
 
 	Mesh interpolate(float t) const;
 	void exportOBJ(std::string fileName);
+	MeshGL bake();
 };
