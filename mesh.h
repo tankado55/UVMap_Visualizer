@@ -24,8 +24,7 @@ struct Mesh
 	std::vector<Face> f;
 
 	bool importOBJ(const char* fileName);
-
-	Mesh interpolate(float t) const;
 	void exportOBJ(std::string fileName);
+	Mesh interpolate(float t) const;
 	MeshGL bake();
 };

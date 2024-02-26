@@ -138,6 +138,8 @@
     <ClCompile Include="mesh_assimp.cpp" />
     <ClCompile Include="mesh_exporter.cpp" />
     <ClCompile Include="meshGL.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="vendor\imgui-1.90.1\backends\imgui_impl_glfw.cpp" />
     <ClCompile Include="vendor\imgui-1.90.1\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="vendor\imgui-1.90.1\imgui.cpp" />
@@ -149,6 +151,8 @@
   <ItemGroup>
     <ClInclude Include="mesh.h" />
     <ClInclude Include="meshGL.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="vendor\imgui-1.90.1\backends\imgui_impl_glfw.h" />
     <ClInclude Include="vendor\imgui-1.90.1\backends\imgui_impl_opengl3.h" />
     <ClInclude Include="vendor\imgui-1.90.1\imgui.h" />
