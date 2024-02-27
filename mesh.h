@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 
-struct MeshGL;
+struct MeshGl;
 
 struct Vertex
 {
@@ -26,5 +26,5 @@ struct Mesh
 	bool importOBJ(const char* fileName);
 	void exportOBJ(std::string fileName);
 	Mesh interpolate(float t) const;
-	MeshGL bake();
+	MeshGl bake();
 };

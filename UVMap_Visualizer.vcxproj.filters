@@ -24,7 +24,7 @@
     <ClCompile Include="mesh_assimp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="meshGL.cpp">
+    <ClCompile Include="meshGl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="mesh_exporter.cpp">
@@ -57,12 +57,18 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\stb_image\stb_image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="meshGL.h">
+    <ClInclude Include="meshGl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vendor\imgui-1.90.1\imgui.h">
@@ -90,6 +96,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,6 @@
 #include <GL/glew.h>
+#include <glm/geometric.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <imgui.h>
@@ -6,6 +8,9 @@
 #include <backends/imgui_impl_opengl3.h>
 
 #include "mesh.h"
+#include "meshGL.h"
+#include "shader.h"
+#include "Texture.h"
 
 int main() {
 
@@ -46,6 +51,7 @@ int main() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // it defines how opengl blend alpha pixels
     glEnable(GL_DEPTH_TEST);
 
+    // imgui
     const char* glsl_version = "#version 130";
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -58,9 +64,28 @@ int main() {
 #endif
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    Mesh cube;
-    cube.importOBJ("models/Die-OBJ/Die-OBJ.obj");
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -10.0));
+    glm::mat4 proj = glm::perspective(glm::radians(45.0f), 960.0f / 540.0f, 0.1f, 500.0f);
 
+    Mesh mesh;
+    mesh.importOBJ("res/models/backpack/backpack.obj");
+    Shader shader("res/shaders/basic.hlsl");
+    shader.Bind();
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(0.0, 0.0, 0.0));
+    shader.SetUniformMat4f("u_Model", model);
+    shader.SetUniformMat4f("u_View", view);
+    shader.SetUniformMat4f("u_Proj", proj);
+
+    Texture texture("res/models/backpack/diffuse.jpg");
+    shader.SetUniform1i("u_Texture", 0); // slot of the texture
+
+    float textureColorMode = 0;
+    float textureGridMode = 0;
+    float interpolation = 0;
+    
+    MeshGl meshGl;
+    meshGl = mesh.bake();
 
     // ********************* Renderer Loop ********************* //
     while (!glfwWindowShouldClose(window))
@@ -68,14 +93,27 @@ int main() {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        
+        shader.SetUniform1f("u_TextureColorMode", textureColorMode);
+        shader.SetUniform1f("u_TextureGridMode", textureGridMode);
+        texture.Bind();
 
+        Mesh meshInterpolated = mesh.interpolate(interpolation);
+        meshGl.updateBuffer(meshInterpolated);
+        
+        meshGl.draw(shader);
 
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-    
+
+        ImGui::Begin("Test");
+        ImGui::SliderFloat("Texture Color", &textureColorMode, 0, 1.0f);
+        ImGui::SliderFloat("Texture Grid", &textureGridMode, 0, 1.0f);
+        ImGui::SliderFloat("Interpolation", &interpolation, 0.0f, 1.0f);
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        ImGui::End();
+        
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

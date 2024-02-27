@@ -24,9 +24,9 @@ Mesh Mesh::interpolate(float t) const
     return result;
 }
 
-MeshGL Mesh::bake()
+MeshGl Mesh::bake()
 {
-    MeshGL result;
+    MeshGl result;
 
     glGenVertexArrays(1, &result.VAO);
     glGenBuffers(1, &result.VBO);
@@ -46,6 +46,7 @@ MeshGL Mesh::bake()
     }
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, result.EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+    result.indexCount = indices.size();
 
     // vertex Positions
     glEnableVertexAttribArray(0);
