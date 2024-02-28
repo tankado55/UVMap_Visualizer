@@ -19,8 +19,12 @@ static void convert(aiMesh* mesh, Mesh& output)
         // texture coordinates
         if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
         {
-            vertex.uv.x = mesh->mTextureCoords[0][i].x;
-            vertex.uv.y = mesh->mTextureCoords[0][i].y;
+            vertex.uv.x = glm::fract(mesh->mTextureCoords[0][i].x);
+            vertex.uv.y = glm::fract(mesh->mTextureCoords[0][i].y);
+            if (vertex.uv.x > 1.0 || vertex.uv.y > 1.0)
+            {
+                std::cout << "warning" << std::endl;
+            }
         }
         else vertex.uv = glm::vec2(0.0f, 0.0f);
 
