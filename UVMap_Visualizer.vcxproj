@@ -141,6 +141,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Utils.cpp" />
     <ClCompile Include="vendor\imgui-1.90.1\backends\imgui_impl_glfw.cpp" />
     <ClCompile Include="vendor\imgui-1.90.1\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="vendor\imgui-1.90.1\imgui.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="Utils.h" />
     <ClInclude Include="vendor\imgui-1.90.1\backends\imgui_impl_glfw.h" />
     <ClInclude Include="vendor\imgui-1.90.1\backends\imgui_impl_opengl3.h" />
     <ClInclude Include="vendor\imgui-1.90.1\imgui.h" />

@@ -3,6 +3,7 @@
 #include <assimp/postprocess.h>
 #include <iostream>
 #include "mesh.h"
+#include "Utils.h"
 
 static void convert(aiMesh* mesh, Mesh& output)
 {
@@ -32,14 +33,38 @@ static void convert(aiMesh* mesh, Mesh& output)
         
         if (face.mNumIndices == 3) {
             Face meshFace;
-            meshFace.vi[0] = ++face.mIndices[0];
-            meshFace.vi[1] = ++face.mIndices[1];
-            meshFace.vi[2] = ++face.mIndices[2];
+            meshFace.vi[0] = face.mIndices[0];
+            meshFace.vi[1] = face.mIndices[1];
+            meshFace.vi[2] = face.mIndices[2];
 
             output.f.push_back(meshFace);
         }
         else {
             std::cout << "warning, face.mNumIndices: " << face.mNumIndices << std::endl;
+        }
+    }
+}
+
+static void computeUVScaling(aiMesh* meshAi, Mesh& mesh)
+{
+    for (unsigned int i = 0; i < meshAi->mNumFaces; i++)
+    {
+        aiFace face = meshAi->mFaces[i];
+        if (face.mNumIndices == 3) {
+            //scaling UV
+            glm::vec3 v1 = mesh.v[face.mIndices[0]].pos;
+            glm::vec3 v2 = mesh.v[face.mIndices[1]].pos;
+            glm::vec3 v3 = mesh.v[face.mIndices[2]].pos;
+
+            float areaMesh = Utils::ComputeArea(v1, v2, v3);
+
+            v1 = glm::vec3(mesh.v[face.mIndices[0]].uv, 0.0f);
+            v2 = glm::vec3(mesh.v[face.mIndices[1]].uv, 0.0f);
+            v3 = glm::vec3(mesh.v[face.mIndices[2]].uv, 0.0f);
+
+            float areaUV = Utils::ComputeArea(v1, v2, v3);
+
+            mesh.f[i].uvScaling = sqrt(areaMesh / areaUV);
         }
     }
 }
@@ -51,6 +76,7 @@ static void processNode(aiNode* node, const aiScene* scene, Mesh& mesh)
     {
         aiMesh* aim = scene->mMeshes[node->mMeshes[i]];
         convert(aim, mesh);
+        computeUVScaling(aim, mesh);
         break;
     }
     // after we've processed all of the meshes (if any) we then recursively process each of the children nodes

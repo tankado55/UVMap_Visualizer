@@ -16,6 +16,7 @@ struct Vertex
 struct Face
 {
 	int vi[3];
+	float uvScaling;
 };
 
 struct Mesh

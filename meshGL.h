@@ -13,6 +13,7 @@ private:
 
 public:
 	void draw(const Shader& shader) const;
+	void updateGeometry(const Mesh& mesh);
 	void deleteBuffers();
 
 	~MeshGl();

@@ -64,11 +64,11 @@ int main() {
 #endif
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -10.0));
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -150.0));
     glm::mat4 proj = glm::perspective(glm::radians(45.0f), 960.0f / 540.0f, 0.1f, 500.0f);
 
     Mesh mesh;
-    mesh.importOBJ("res/models/backpack/backpack.obj");
+    mesh.importOBJ("res/models/_Wheel_195_50R13x10_OBJ/wheel.obj");
     Shader shader("res/shaders/basic.hlsl");
     shader.Bind();
     glm::mat4 model = glm::mat4(1.0f);
@@ -77,11 +77,11 @@ int main() {
     shader.SetUniformMat4f("u_View", view);
     shader.SetUniformMat4f("u_Proj", proj);
 
-    Texture texture("res/models/backpack/diffuse.jpg");
+    Texture texture("res/models/_Wheel_195_50R13x10_OBJ/diffuse.png");
     shader.SetUniform1i("u_Texture", 0); // slot of the texture
 
-    float textureColorMode = 0;
-    float textureGridMode = 0;
+    float textureColorMode = 0.5;
+    float textureGridMode = 0.5;
     float interpolation = 0;
     
     MeshGl meshGl;
@@ -98,10 +98,8 @@ int main() {
         texture.Bind();
 
         Mesh meshInterpolated = mesh.interpolate(interpolation);
-        meshGl.updateBuffer(meshInterpolated);
-        
+        meshGl.updateGeometry(meshInterpolated);
         meshGl.draw(shader);
-
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
