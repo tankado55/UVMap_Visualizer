@@ -17,6 +17,8 @@ struct Face
 {
 	int vi[3];
 	float uvScaling;
+	glm::vec3 centroid3D;
+	glm::vec3 centroid2D;
 };
 
 struct Mesh
