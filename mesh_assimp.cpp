@@ -1,6 +1,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <glm/gtx/inverse_transpose.hpp>
 #include <iostream>
 #include "mesh.h"
 #include "Utils.h"
@@ -73,7 +74,7 @@ static void computeUVScaling(aiMesh* meshAi, Mesh& mesh)
     }
 }
 
-static double SignedVolumeOfTetrahedron(glm::vec3 a, glm::vec3 b, glm::vec3 c)
+static float SignedVolumeOfTetrahedron(glm::vec3 a, glm::vec3 b, glm::vec3 c)
 {
     return glm::dot(a, glm::cross(b, c)) / 6.0f;
 }
@@ -81,14 +82,14 @@ static double SignedVolumeOfTetrahedron(glm::vec3 a, glm::vec3 b, glm::vec3 c)
 static void addMeshCentroids(Mesh& mesh)
 {
     //mesh3D
-    glm::vec3 centroid;
+    glm::vec3 centroid = glm::vec3(0.0);
     float volume = 0;
     for (int i = 0; i < mesh.f.size(); i++)
     {
         Face face = mesh.f[i];
-        glm::vec3 b = mesh.v[face.vi[0]].pos;
         glm::vec3 a = mesh.v[face.vi[0]].pos;
-        glm::vec3 c = mesh.v[face.vi[0]].pos;
+        glm::vec3 b = mesh.v[face.vi[1]].pos;
+        glm::vec3 c = mesh.v[face.vi[2]].pos;
 
         float tetrahedronVolume = SignedVolumeOfTetrahedron(a, b, c);
         centroid += tetrahedronVolume * (a + b + c) / 4.0f;
@@ -103,25 +104,26 @@ static void addMeshCentroids(Mesh& mesh)
     {
         //mesh2D
         Face face = mesh.f[i];
-        glm::vec3 b = glm::vec3(mesh.v[face.vi[0]].uv, 0.0);
         glm::vec3 a = glm::vec3(mesh.v[face.vi[0]].uv, 0.0);
-        glm::vec3 c = glm::vec3(mesh.v[face.vi[0]].uv, 0.0);
+        glm::vec3 b = glm::vec3(mesh.v[face.vi[1]].uv, 0.0);
+        glm::vec3 c = glm::vec3(mesh.v[face.vi[2]].uv, 0.0);
 
         float tetrahedronVolume = SignedVolumeOfTetrahedron(a, b, c);
         centroid += tetrahedronVolume * (a + b + c) / 4.0f;
         volume += tetrahedronVolume;
     }
-    mesh.centroid2D = centroid / volume;
+    //mesh.centroid2D = centroid / volume;
+    mesh.centroid2D = glm::vec3(0.0);
 }
 
-static glm::mat3 computeBestRotation(Mesh& mesh)
+static glm::mat3 computeInitRotation(Mesh& mesh)
 {
-    glm::mat3 result;
+    glm::mat3 result = glm::mat3();
     for (int i = 0; i < mesh.f.size(); i++)
     {
         Face face = mesh.f[i];
-        glm::vec3 vi;
-        glm::vec3 wi;
+        glm::vec3 vi = glm::vec3(0.0);
+        glm::vec3 wi = glm::vec3(0.0);
 
         vi = mesh.v[face.vi[0]].pos - mesh.centroid3D;
         wi = glm::vec3(mesh.v[face.vi[0]].uv, 0.0) - mesh.centroid2D;
@@ -154,7 +156,7 @@ static void processNode(aiNode* node, const aiScene* scene, Mesh& mesh)
         convert(aim, mesh);
         computeUVScaling(aim, mesh);
         addMeshCentroids(mesh);
-        mesh.bestRotation = computeBestRotation(mesh);
+        mesh.bestRotation = computeInitRotation(mesh);
         break;
     }
     // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
