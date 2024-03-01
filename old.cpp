@@ -30,3 +30,46 @@ static void addCentroids(aiMesh* meshAi, Mesh& mesh)
         }
     }
 }
+
+// centroids with volumes
+static float SignedVolumeOfTetrahedron(glm::vec3 a, glm::vec3 b, glm::vec3 c)
+{
+    return glm::dot(a, glm::cross(b, c)) / 6.0f;
+}
+
+static void setupCentroids(Mesh& mesh)
+{
+    //mesh3D
+    glm::vec3 centroid = glm::vec3(0.0);
+    float volume = 0;
+    for (int i = 0; i < mesh.f.size(); i++)
+    {
+        Face face = mesh.f[i];
+        glm::vec3 a = mesh.v[face.vi[0]].pos;
+        glm::vec3 b = mesh.v[face.vi[1]].pos;
+        glm::vec3 c = mesh.v[face.vi[2]].pos;
+
+        float tetrahedronVolume = SignedVolumeOfTetrahedron(a, b, c);
+        centroid += tetrahedronVolume * (a + b + c) / 4.0f;
+        volume += tetrahedronVolume;
+    }
+    mesh.centroid3D = centroid / volume;
+
+    //2D
+    centroid = glm::vec3(0.0);
+    volume = 0;
+    for (int i = 0; i < mesh.f.size(); i++)
+    {
+        //mesh2D
+        Face face = mesh.f[i];
+        glm::vec3 a = glm::vec3(mesh.v[face.vi[0]].uv, 0.0);
+        glm::vec3 b = glm::vec3(mesh.v[face.vi[1]].uv, 0.0);
+        glm::vec3 c = glm::vec3(mesh.v[face.vi[2]].uv, 0.0);
+
+        float tetrahedronVolume = SignedVolumeOfTetrahedron(a, b, c);
+        centroid += tetrahedronVolume * (a + b + c) / 4.0f;
+        volume += tetrahedronVolume;
+    }
+    //mesh.centroid2D = centroid / volume;
+    mesh.centroid2D = glm::vec3(0.0);
+}
