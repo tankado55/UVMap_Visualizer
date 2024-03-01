@@ -1,7 +1,6 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-#include <glm/gtx/inverse_transpose.hpp>
 #include <iostream>
 #include "mesh.h"
 #include "Utils.h"
@@ -139,8 +138,8 @@ static glm::mat3 computeInitRotation(Mesh& mesh)
         result += outer;
     }
     result = result / static_cast<float>(mesh.f.size() * 3);
-
-    glm::mat3 inverseTranspose = glm::inverseTranspose(result);
+    glm::mat3 transpose = glm::transpose(result);
+    glm::mat3 inverseTranspose = glm::inverse(glm::transpose(result));
 
     result = (result + inverseTranspose) / 2.0f;
 
