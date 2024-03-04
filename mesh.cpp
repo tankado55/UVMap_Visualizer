@@ -11,13 +11,14 @@ Mesh Mesh::interpolate(float t) const
     result.f = f;
     
     result.v.resize(v.size());
+    
     for (int i = 0; i < v.size(); i++)
     {
         int faceIndex = i / 3;
-        float uvScale = f[faceIndex].uvScaling;
+        //float uvScaling = f[faceIndex].uvScaling;
         result.v[i].pos = glm::mix(
-            this->v[i].pos, 
-            glm::vec3(this->v[i].uv, 0.0) *uvScale,
+            this->v[i].pos * bestRotation, 
+            glm::vec3(this->v[i].uv, 0.0) * averageScaling,
             t
         );
         result.v[i].uv = this->v[i].uv;

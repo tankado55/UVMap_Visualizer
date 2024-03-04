@@ -31,6 +31,7 @@ struct Mesh
 	std::vector<Face> f;
 	glm::vec3 centroid3D;
 	glm::vec3 centroid2D;
+	float averageScaling;
 	glm::mat3 bestRotation;
 
 	bool importOBJ(const char* fileName);

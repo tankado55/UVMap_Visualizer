@@ -11,6 +11,7 @@
 #include "meshGL.h"
 #include "shader.h"
 #include "Texture.h"
+#include "Camera.h"
 
 int main() {
 
@@ -68,17 +69,17 @@ int main() {
     glm::mat4 proj = glm::perspective(glm::radians(45.0f), 960.0f / 540.0f, 0.1f, 500.0f);
 
     Mesh mesh;
-    mesh.importOBJ("res/models/backpack/backpack.obj");
+    mesh.importOBJ("res/models/_Wheel_195_50R13x10_OBJ/wheel.obj");
     Shader shader("res/shaders/basic.hlsl");
     shader.Bind();
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(0.0, 0.0, 0.0));
-    model = glm::mat4(mesh.bestRotation) * model ;
+    //model = glm::mat4(mesh.bestRotation) * model ;
     shader.SetUniformMat4f("u_Model", model);
     shader.SetUniformMat4f("u_View", view);
     shader.SetUniformMat4f("u_Proj", proj);
 
-    Texture texture("res/models/backpack/diffuse.jpg");
+    Texture texture("res/models/_Wheel_195_50R13x10_OBJ/diffuse.png");
     shader.SetUniform1i("u_Texture", 0); // slot of the texture
 
     float textureColorMode = 0.5;
@@ -88,12 +89,24 @@ int main() {
     MeshGl meshGl;
     meshGl = mesh.bake();
 
+    Camera camera;
+    float deltaTime = 0.0f;
+    float lastFrame = 0.0f; // Time of last frame
+
     // ********************* Renderer Loop ********************* //
     while (!glfwWindowShouldClose(window))
     {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        camera.ProcessKeyboardInput(deltaTime, window);
+        view = camera.GetView();
+
+        shader.Bind();
+        shader.SetUniformMat4f("u_View", view);
         shader.SetUniform1f("u_TextureColorMode", textureColorMode);
         shader.SetUniform1f("u_TextureGridMode", textureGridMode);
         texture.Bind();

@@ -2,6 +2,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <iostream>
+#include <Eigen/Dense>
 #include "mesh.h"
 #include "Utils.h"
 
@@ -23,7 +24,7 @@ static void convert(aiMesh* mesh, Mesh& output)
             vertex.uv.y = glm::fract(mesh->mTextureCoords[0][i].y);
             if (vertex.uv.x > 1.0 || vertex.uv.y > 1.0)
             {
-                std::cout << "warning" << std::endl;
+                std::cout << "warning, uv > 1.0" << std::endl;
             }
         }
         else vertex.uv = glm::vec2(0.0f, 0.0f);
@@ -51,6 +52,7 @@ static void convert(aiMesh* mesh, Mesh& output)
 
 static void computeUVScaling(aiMesh* meshAi, Mesh& mesh)
 {
+    float scalingSum = 0.0;
     for (unsigned int i = 0; i < meshAi->mNumFaces; i++)
     {
         aiFace face = meshAi->mFaces[i];
@@ -68,9 +70,12 @@ static void computeUVScaling(aiMesh* meshAi, Mesh& mesh)
 
             float areaUV = Utils::ComputeArea(v1, v2, v3);
 
-            mesh.f[i].uvScaling = sqrt(areaMesh / areaUV);
+            float ratio = sqrt(areaMesh / areaUV);
+            mesh.f[i].uvScaling = ratio;
+            scalingSum += ratio;
         }
     }
+    mesh.averageScaling = scalingSum / meshAi->mNumFaces;
 }
 
 static void setupCentroids(Mesh& mesh)
@@ -112,6 +117,26 @@ static void setupCentroids(Mesh& mesh)
     mesh.centroid2D = centroid / areaSum;
 }
 
+static Eigen::MatrixXd glmToEigen(const glm::mat3& glmMatrix) {
+    Eigen::MatrixXd eigenMatrix(3, 3);
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            eigenMatrix(i, j) = glmMatrix[i][j];
+        }
+    }
+    return eigenMatrix;
+}
+
+static glm::mat3 eigenToGlm(const Eigen::MatrixXd& eigenMatrix) {
+    glm::mat3 glmMatrix;
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            glmMatrix[i][j] = eigenMatrix(i, j);
+        }
+    }
+    return glmMatrix;
+}
+
 static glm::mat3 computeInitRotation(Mesh& mesh)
 {
     glm::mat3 result = glm::mat3();
@@ -135,10 +160,17 @@ static glm::mat3 computeInitRotation(Mesh& mesh)
         result += outer;
     }
     result = result / static_cast<float>(mesh.f.size() * 3);
-    glm::mat3 transpose = glm::transpose(result);
-    glm::mat3 inverseTranspose = glm::inverse(glm::transpose(result));
 
-    result = (result + inverseTranspose) / 2.0f;
+    // SVD
+    Eigen::MatrixXd A = glmToEigen(result);
+    Eigen::JacobiSVD<Eigen::MatrixXd> svd(A, Eigen::ComputeFullU | Eigen::ComputeFullV);
+
+    Eigen::Matrix3d R = svd.matrixU() * svd.matrixV().transpose();
+
+    if (R.determinant() < 0) {
+        R *= -1;
+    }
+    result = eigenToGlm(R);
 
     return result;
 }

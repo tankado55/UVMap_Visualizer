@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\dev\my_libs\glm-1.0.0-light;D:\dev\my_libs\assimp-5.3.1\include;D:\dev\my_libs\glew-2.1.0\include;D:\dev\my_libs\GLFW\include;D:\dev\my_libs\imgui-1.90.1</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\dev\my_libs\glm-1.0.0-light;D:\dev\my_libs\assimp-5.3.1\include;D:\dev\my_libs\glew-2.1.0\include;D:\dev\my_libs\GLFW\include;D:\dev\my_libs\imgui-1.90.1;D:\dev\UVMap_Visualizer\vendor\eigen-3.4.0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="mesh_assimp.cpp" />
@@ -152,12 +153,18 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="meshGl.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="vendor\eigen-3.4.0\Eigen\src\SVD\BDCSVD.h" />
+    <ClInclude Include="vendor\eigen-3.4.0\Eigen\src\SVD\JacobiSVD.h" />
+    <ClInclude Include="vendor\eigen-3.4.0\Eigen\src\SVD\JacobiSVD_LAPACKE.h" />
+    <ClInclude Include="vendor\eigen-3.4.0\Eigen\src\SVD\SVDBase.h" />
+    <ClInclude Include="vendor\eigen-3.4.0\Eigen\src\SVD\UpperBidiagonalization.h" />
     <ClInclude Include="vendor\imgui-1.90.1\backends\imgui_impl_glfw.h" />
     <ClInclude Include="vendor\imgui-1.90.1\backends\imgui_impl_opengl3.h" />
     <ClInclude Include="vendor\imgui-1.90.1\imgui.h" />
