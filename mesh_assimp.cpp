@@ -20,8 +20,8 @@ static void convert(aiMesh* mesh, Mesh& output)
         // texture coordinates
         if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
         {
-            vertex.uv.x = glm::fract(mesh->mTextureCoords[0][i].x);
-            vertex.uv.y = glm::fract(mesh->mTextureCoords[0][i].y);
+            vertex.uv.x = mesh->mTextureCoords[0][i].x;
+            vertex.uv.y = mesh->mTextureCoords[0][i].y;
             if (vertex.uv.x > 1.0 || vertex.uv.y > 1.0)
             {
                 std::cout << "warning, uv > 1.0" << std::endl;
@@ -69,13 +69,18 @@ static void computeUVScaling(aiMesh* meshAi, Mesh& mesh)
             v3 = glm::vec3(mesh.v[face.mIndices[2]].uv, 0.0f);
 
             float areaUV = Utils::ComputeArea(v1, v2, v3);
-
-            float ratio = sqrt(areaMesh / areaUV);
-            mesh.f[i].uvScaling = ratio;
-            scalingSum += ratio;
+            if (areaUV > 0)
+            {
+                float ratio = sqrt(areaMesh / areaUV);
+                mesh.f[i].uvScaling = ratio;
+                scalingSum += ratio;
+            }
         }
     }
-    mesh.averageScaling = scalingSum / meshAi->mNumFaces;
+    if (scalingSum != 0)
+        mesh.averageScaling = scalingSum / meshAi->mNumFaces;
+    else
+        mesh.averageScaling = 1.0;
 }
 
 static void setupCentroids(Mesh& mesh)
@@ -206,7 +211,10 @@ bool Mesh::importOBJ(const char* fileName)
     }
 
     processNode(scene->mRootNode , scene, *this);
+    std::cout << "vertices: " << v.size() << std::endl;
     return true;
 }
+
+
 
 

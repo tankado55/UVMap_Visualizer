@@ -69,12 +69,14 @@ int main() {
     glm::mat4 proj = glm::perspective(glm::radians(45.0f), 960.0f / 540.0f, 0.1f, 500.0f);
 
     Mesh mesh;
+    //mesh.buildCylinder();
+    //mesh.importOBJ("res/models/cylinder/cylinder.obj");
+    //mesh.exportOBJ("res/models/cylinder/yesy.obj");
     mesh.importOBJ("res/models/_Wheel_195_50R13x10_OBJ/wheel.obj");
     Shader shader("res/shaders/basic.hlsl");
     shader.Bind();
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(0.0, 0.0, 0.0));
-    //model = glm::mat4(mesh.bestRotation) * model ;
     shader.SetUniformMat4f("u_Model", model);
     shader.SetUniformMat4f("u_View", view);
     shader.SetUniformMat4f("u_Proj", proj);

@@ -38,4 +38,5 @@ struct Mesh
 	void exportOBJ(std::string fileName);
 	Mesh interpolate(float t) const;
 	MeshGl bake();
+	void buildCylinder();
 };

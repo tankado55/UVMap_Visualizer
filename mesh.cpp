@@ -66,3 +66,80 @@ MeshGl Mesh::bake()
 
     return result;
 }
+
+#define PI 3.14159265358979323846
+
+void Mesh::buildCylinder()
+{
+    v.clear();
+    int n = 10;
+    float radius = 1.0f;
+    float height = 2.0f;
+
+    float segmentAngle = 2.0f * PI / n;
+
+    for (int i = 0; i < n; i++)
+    {
+        float angle = i * segmentAngle;
+        float x = radius * cos(angle);
+        float z = radius * sin(angle);
+
+        Vertex vertex;
+
+        // Top vertices 
+        vertex.pos[0] = x;
+        vertex.pos[1] = height / 2;
+        vertex.pos[2] = z;
+        vertex.uv[0] = ((float)i / n);
+        vertex.uv[1] = 1.0f;
+        v.push_back(vertex);
+
+        // Bottom vertices
+        vertex.pos[0] = x;
+        vertex.pos[1] = -height / 2;
+        vertex.pos[2] = z;
+        vertex.uv[0] = ((float)i / n);
+        vertex.uv[1] = 0.0f;
+        v.push_back(vertex);
+    }
+    // Duplicate first and last vertices for texture wrapping
+    for (int i = 0; i < 2; ++i)
+    {
+        float angle = i * segmentAngle;
+        float x = radius * cos(angle);
+        float z = radius * sin(angle);
+
+        Vertex vertex;
+
+        // Top vertices 
+        vertex.pos[0] = x;
+        vertex.pos[1] = height / 2;
+        vertex.pos[2] = z;
+        vertex.uv[0] = ((float)i / n);
+        vertex.uv[1] = 1.0f;
+        v.push_back(vertex);
+
+        // Bottom vertices
+        vertex.pos[0] = x;
+        vertex.pos[1] = -height / 2;
+        vertex.pos[2] = z;
+        vertex.uv[0] = ((float)i / n);
+        vertex.uv[1] = 0.0f;
+        v.push_back(vertex);
+    }
+
+    for (int i = 0; i < n * 2; i += 2) {
+        Face face;
+        face.vi[0] = (i + 4);
+        face.vi[1] = (i + 2);
+        face.vi[2] = (i + 1);
+        f.push_back(face);
+        
+        face.vi[0] = (i + 1);
+        face.vi[1] = (i + 3);
+        face.vi[2] = (i + 4);
+        f.push_back(face);
+    }
+    averageScaling = 1.0;
+    bestRotation = glm::mat3();
+}
