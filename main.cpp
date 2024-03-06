@@ -12,6 +12,7 @@
 #include "shader.h"
 #include "Texture.h"
 #include "Camera.h"
+#include "InputManager.h"
 
 int main() {
 
@@ -86,7 +87,8 @@ int main() {
 
     float textureColorMode = 0.5;
     float textureGridMode = 0.5;
-    float interpolation = 0;
+    float interpolation = 0.0;
+    float interpolationSpeed = 1.0;
     
     MeshGl meshGl;
     meshGl = mesh.bake();
@@ -94,6 +96,9 @@ int main() {
     Camera camera;
     float deltaTime = 0.0f;
     float lastFrame = 0.0f; // Time of last frame
+
+    InputManager::GetInstance()->SetWindow(window);
+    InputManager::GetInstance()->Start(&camera);
 
     // ********************* Renderer Loop ********************* //
     while (!glfwWindowShouldClose(window))
@@ -116,6 +121,14 @@ int main() {
         Mesh meshInterpolated = mesh.interpolate(interpolation);
         meshGl.updateGeometry(meshInterpolated);
         meshGl.draw(shader);
+
+        float speed = interpolationSpeed * deltaTime;
+        if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+            interpolation -= speed;
+        if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+            interpolation += speed;
+
+        interpolation = std::max(0.0f, std::min(interpolation, 1.0f));
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
