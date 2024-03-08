@@ -78,6 +78,8 @@ int main() {
     shader.Bind();
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(0.0, 0.0, 0.0));
+    float scalingFactor = 1.0 / mesh.boundingSphere.radius * 2.0f;
+    model = glm::scale(model, glm::vec3(scalingFactor, scalingFactor, scalingFactor));
     shader.SetUniformMat4f("u_Model", model);
     shader.SetUniformMat4f("u_View", view);
     shader.SetUniformMat4f("u_Proj", proj);

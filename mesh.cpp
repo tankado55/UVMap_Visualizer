@@ -146,9 +146,6 @@ void Mesh::buildCylinder()
 
 void Mesh::updateBB()
 {
-    glm::vec3 center;
-    float radius;
-
     glm::vec3 minExtents = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
     glm::vec3 maxExtents = { -std::numeric_limits<float>::max(), -std::numeric_limits<float>::max(), -std::numeric_limits<float>::max() };
 
@@ -166,7 +163,7 @@ void Mesh::updateBB()
             maxExtents.z = std::max(maxExtents.z, vertex.pos.z);
         }
     }
-    glm::vec3 center = {
+    boundingSphere.center = {
         (minExtents.x + maxExtents.x) / 2,
         (minExtents.y + maxExtents.y) / 2,
         (minExtents.z + maxExtents.z) / 2
@@ -179,10 +176,10 @@ void Mesh::updateBB()
         for (int j = 0; j < 3; j++)
         {
             Vertex vertex = v[face.vi[j]];
-            float distanceSquared = pow(vertex.pos.x - center.x, 2) + pow(vertex.pos.y - center.y, 2) + pow(vertex.pos.z - center.z, 2);
+            float distanceSquared = pow(vertex.pos.x - boundingSphere.center.x, 2) + pow(vertex.pos.y - boundingSphere.center.y, 2) + pow(vertex.pos.z - boundingSphere.center.z, 2);
             maxRadiusSquared = std::max(maxRadiusSquared, distanceSquared);
         }
     }
 
-    float radius = sqrt(maxRadiusSquared);
+    boundingSphere.radius = sqrt(maxRadiusSquared);
 }

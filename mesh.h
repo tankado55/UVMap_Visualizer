@@ -25,6 +25,12 @@ struct Face
 	glm::vec3 centroid2D;
 };
 
+struct BoundingSphere
+{
+	glm::vec3 center;
+	float radius;
+};
+
 struct Mesh
 {
 	std::vector<Vertex> v;
@@ -33,6 +39,7 @@ struct Mesh
 	glm::vec3 centroid2D;
 	float averageScaling;
 	glm::mat3 bestRotation;
+	BoundingSphere boundingSphere;
 
 	bool importOBJ(const char* fileName);
 	void exportOBJ(std::string fileName);

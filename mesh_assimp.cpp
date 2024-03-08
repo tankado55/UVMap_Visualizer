@@ -190,6 +190,7 @@ static void processNode(aiNode* node, const aiScene* scene, Mesh& mesh)
         computeUVScaling(aim, mesh);
         setupCentroids(mesh);
         mesh.bestRotation = computeInitRotation(mesh);
+        mesh.updateBB();
         break;
     }
     // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
