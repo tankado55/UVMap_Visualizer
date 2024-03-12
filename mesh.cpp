@@ -14,11 +14,17 @@ Mesh Mesh::interpolate(float t) const
     
     for (int i = 0; i < v.size(); i++)
     {
+        glm::vec3 targetUV(this->v[i].uv, 0.0);
+        if (toFlip)
+        {
+            targetUV.x = -targetUV.x + 1.0f;
+        }
+
         int faceIndex = i / 3;
         //float uvScaling = f[faceIndex].uvScaling;
         result.v[i].pos = glm::mix(
             this->v[i].pos * bestRotation, 
-            glm::vec3(this->v[i].uv, 0.0) * averageScaling,
+            targetUV * averageScaling,
             t
         );
         result.v[i].uv = this->v[i].uv;
@@ -183,3 +189,4 @@ void Mesh::updateBB()
 
     boundingSphere.radius = sqrt(maxRadiusSquared);
 }
+

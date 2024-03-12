@@ -15,6 +15,7 @@ struct Vertex
 {
 	glm::vec3 pos;
 	glm::vec2 uv;
+	glm::vec3 normal;
 };
 
 struct Face
@@ -40,6 +41,7 @@ struct Mesh
 	float averageScaling;
 	glm::mat3 bestRotation;
 	BoundingSphere boundingSphere;
+	bool toFlip = false;
 
 	bool importOBJ(const char* fileName);
 	void exportOBJ(std::string fileName);
@@ -47,4 +49,5 @@ struct Mesh
 	MeshGl bake();
 	void buildCylinder();
 	void updateBB();
+	void updateToFlipBool();
 };

@@ -63,7 +63,7 @@ int main() {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
 #ifdef __EMSCRIPTEN__
     ImGui_ImplGlfw_InstallEmscriptenCanvasResizeCallback("#canvas");
-#endif
+#endif````
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -25.0));

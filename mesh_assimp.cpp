@@ -29,6 +29,16 @@ static void convert(aiMesh* mesh, Mesh& output)
         }
         else vertex.uv = glm::vec2(0.0f, 0.0f);
 
+        // normals
+        if (mesh->HasNormals())
+        {
+            glm::vec3 vector;
+            vector.x = mesh->mNormals[i].x;
+            vector.y = mesh->mNormals[i].y;
+            vector.z = mesh->mNormals[i].z;
+            vertex.normal = vector;
+        }
+
         output.v.push_back(vertex);
     }
 
@@ -191,6 +201,7 @@ static void processNode(aiNode* node, const aiScene* scene, Mesh& mesh)
         setupCentroids(mesh);
         mesh.bestRotation = computeInitRotation(mesh);
         mesh.updateBB();
+        mesh.updateToFlipBool();
         break;
     }
     // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
@@ -200,10 +211,28 @@ static void processNode(aiNode* node, const aiScene* scene, Mesh& mesh)
     }
 }
 
+void Mesh::updateToFlipBool()
+{
+    glm::vec3 crossSum(0.0);
+    for (int i = 0; i < f.size(); i++)
+    {
+        Face face = f[i];
+        
+        glm::vec2 vi(v[face.vi[1]].uv - v[face.vi[0]].uv);
+        glm::vec2 wi(v[face.vi[2]].uv - v[face.vi[0]].uv);
+        crossSum += glm::cross(glm::vec3(vi, 0.0), glm::vec3(wi, 0.0));
+    }
+
+    if (crossSum.z < 0.0)
+    {
+        toFlip = true;
+    }
+}
+
 bool Mesh::importOBJ(const char* fileName)
 {
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene* scene = importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
     {
@@ -211,8 +240,9 @@ bool Mesh::importOBJ(const char* fileName)
         return false;
     }
 
-    processNode(scene->mRootNode , scene, *this);
-    std::cout << "vertices: " << v.size() << std::endl;
+    processNode(scene->mRootNode, scene, *this);
+    std::cout << "Vertices: " << v.size() << std::endl;
+    std::cout << "Indexes: " << f.size() * 3 << std::endl;
     return true;
 }
 
