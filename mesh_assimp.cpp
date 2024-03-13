@@ -129,7 +129,14 @@ static void setupCentroids(Mesh& mesh)
         centroid += area * center;
         areaSum += area;
     }
-    mesh.centroid2D = centroid / areaSum;
+    if (areaSum > 0)
+    {
+        mesh.centroid2D = centroid / areaSum;
+    }
+    else
+    {
+        mesh.centroid2D = glm::vec3(0.0, 0.0, 0.0);
+    }
 }
 
 static Eigen::MatrixXd glmToEigen(const glm::mat3& glmMatrix) {

@@ -10,8 +10,11 @@ struct MeshGl
 private:
 	unsigned int VAO, VBO, EBO;
 	unsigned int indexCount;
+public:
+	glm::mat4 model;
 
 public:
+	MeshGl();
 	void draw(const Shader& shader) const;
 	void updateGeometry(const Mesh& mesh);
 	void deleteBuffers();

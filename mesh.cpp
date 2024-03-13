@@ -28,6 +28,7 @@ Mesh Mesh::interpolate(float t) const
             t
         );
         result.v[i].uv = this->v[i].uv;
+        result.v[i].normal = this->v[i].normal;
     }
 
     return result;
@@ -67,6 +68,9 @@ MeshGl Mesh::bake()
     // vertex texture coords
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+    // normals
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 
     glBindVertexArray(0);
 
@@ -148,6 +152,47 @@ void Mesh::buildCylinder()
     }
     averageScaling = 1.0;
     bestRotation = glm::mat3();
+}
+
+void Mesh::buildPlane()
+{
+    float vertices[] = {
+        -10.0, -0.5, -10.0, 0.0,1.0,
+        -10.0, -0.5, 10.0,  0.0,0.0,
+        10.0, -0.5, 10.0,   1.0, 0.0,
+        10.0, -0.5, 10.0,   1.0, 0.0,
+        10.0, -0.5,-10.0,   1.0, 1.0,
+        -10.0, -0.5, -10.0, 0.0, 1.0
+    };
+    float uvs[] = {
+        0.0,1.0,
+        0.0,0.0,
+        1.0, 0.0,
+        1.0, 0.0,
+        1.0, 1.0,
+        0.0, 1.0
+    };
+    v.clear();
+    Vertex vertex;
+    for (int i = 0; i < sizeof(vertices) / sizeof(float); i+=5)
+    {
+        vertex.pos.x = vertices[i];
+        vertex.pos.y = vertices[i + 1];
+        vertex.pos.z = vertices[i + 2];
+        vertex.uv.x =  vertices[i + 3];
+        vertex.uv.y =  vertices[i + 4];
+
+        v.push_back(vertex);
+    }
+        Face face;
+        face.vi[0] = 1;
+        face.vi[1] = 2;
+        face.vi[2] = 3;
+        f.push_back(face);
+        face.vi[0] = 4;
+        face.vi[1] = 5;
+        face.vi[2] = 6;
+        f.push_back(face);
 }
 
 void Mesh::updateBB()

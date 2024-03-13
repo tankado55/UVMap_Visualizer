@@ -32,7 +32,8 @@ public:
 	void SetUniform3f(const std::string& name, float v0, float v1, float v2);
 	void SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
 	void SetUniformMat4f(const std::string& name, const glm::mat4& matrix);
-	void SetUniformVec3f(const std::string& name, const glm::vec3& vec);
+	void SetUniformMat3f(const std::string& name, const glm::mat3& matrix);
+	void SetUniformVec3f(const std::string& name, const glm::vec3& vec) const;
 
 private:
 	ShaderProgramSource ParseShader(const std::string& filepath);

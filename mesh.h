@@ -48,6 +48,7 @@ struct Mesh
 	Mesh interpolate(float t) const;
 	MeshGl bake();
 	void buildCylinder();
+	void buildPlane();
 	void updateBB();
 	void updateToFlipBool();
 };

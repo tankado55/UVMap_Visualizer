@@ -8,6 +8,11 @@ MeshGl::~MeshGl()
     //glDeleteBuffers(1, &EBO);
 }
 
+MeshGl::MeshGl():
+    model(glm::mat4(1.0f))
+{
+}
+
 void MeshGl::draw(const Shader& shader) const
 {
     shader.Bind();
