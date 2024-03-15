@@ -53,6 +53,8 @@ int main() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // it defines how opengl blend alpha pixels
     glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_FRAMEBUFFER_SRGB);// gamme correction
+
 
     // imgui
     const char* glsl_version = "#version 130";
@@ -71,8 +73,8 @@ int main() {
     glm::mat4 proj = glm::perspective(glm::radians(45.0f), 960.0f / 540.0f, 0.1f, 500.0f);
     DirectionalLight dirLight(
         glm::vec3(-0.2f, -1.0f, -0.3f),
-        glm::vec3(0.05f, 0.05f, 0.05f),
-        glm::vec3(0.4f, 0.4f, 0.4f),
+        glm::vec3(0.15f, 0.15f, 0.15f),
+        glm::vec3(0.5f, 0.5f, 0.5f),
         glm::vec3(0.5f, 0.5f, 0.5f)
     );
 
