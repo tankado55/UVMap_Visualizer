@@ -8,7 +8,7 @@ class DepthMapper
 {
 private:
 	unsigned int m_RendererID;
-	T
+	Texture 
 
 public:
 	DepthMapper();
