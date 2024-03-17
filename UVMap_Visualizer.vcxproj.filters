@@ -75,7 +75,10 @@
     <ClCompile Include="directionalLight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="depthMapper.cpp">
+    <ClCompile Include="depthMapFB.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="depthTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -146,7 +149,10 @@
     <ClInclude Include="directionalLight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="depthMapper.h">
+    <ClInclude Include="depthMapFB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="depthTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
