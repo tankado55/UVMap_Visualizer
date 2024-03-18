@@ -87,8 +87,7 @@ int main() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // it defines how opengl blend alpha pixels
     glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_FRAMEBUFFER_SRGB);// gamme correction
-
+    //glEnable(GL_FRAMEBUFFER_SRGB);// gamma correction
 
     // imgui
     const char* glsl_version = "#version 130";
@@ -103,7 +102,8 @@ int main() {
 #endif````
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -25.0));
+    // Init stuff
+    glm::mat4 view;
     glm::mat4 proj = glm::perspective(glm::radians(45.0f), 960.0f / 540.0f, 0.1f, 500.0f);
     DirectionalLight dirLight(
         glm::vec3(-0.2f, -1.0f, -0.3f),
@@ -111,7 +111,6 @@ int main() {
         glm::vec3(0.5f, 0.5f, 0.5f),
         glm::vec3(0.5f, 0.5f, 0.5f)
     );
-
     Mesh mesh;
     //mesh.buildCylinder();
     //mesh.buildPlane();
@@ -122,7 +121,6 @@ int main() {
     Shader depthShader("res/shaders/simpleDepthShader.hlsl");
     Shader quadShader("res/shaders/quad.hlsl");
     quadShader.Bind();
-    quadShader.SetUniform1i("depthMap", 0);
     Shader shader("res/shaders/basic.hlsl");
     MeshGl meshGl;
     meshGl = mesh.bake();
@@ -140,7 +138,6 @@ int main() {
     dirLight.setUniform(shader); // TODO: refactor
     shader.SetUniform1f("material.shininess", 32.0f);
     shader.SetUniformVec3f("u_ViewPos", camera.GetPos());
-    shader.SetUniformMat4f("u_View", view);
     shader.SetUniformMat4f("u_Proj", proj);
 
     Texture texture("res/models/_Wheel_195_50R13x10_OBJ/diffuse.png");
@@ -150,7 +147,6 @@ int main() {
     DepthMapFB depthFB;
     DepthTexture depthMap;
     depthFB.attachTexture(depthMap);
-
 
     float textureColorMode = 0.5;
     float textureGridMode = 0.5;
@@ -214,14 +210,16 @@ int main() {
         //shader.SetUniformMat3f("u_NormalMatrix", glm::mat3(transpose(inverse(planeGl.model))));
         planeGl.draw(depthShader);
 
-        // debug shadow
         depthFB.unBind();
         // reset viewport
         glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        // debug shadow
         quadShader.Bind();
         quadShader.SetUniform1f("near_plane", near_plane);
         quadShader.SetUniform1f("far_plane", far_plane);
+        quadShader.SetUniform1i("depthMap", 0);
         depthMap.Bind(0);
         renderQuad();
 
